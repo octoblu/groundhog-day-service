@@ -5,14 +5,17 @@ class AgendaController
   constructor: () ->
 
   create: (request, response) =>
-    now = moment.utc()
+    now      = moment.utc()
+    tomorrow = moment.utc().add 1, 'day'
 
-    result = _.pickBy request.body, (item) =>
-      startDay = moment.utc(item.startDate, 'YYYY-MM-DD')
-      console.log 'startDay', startDay.format()
-      console.log 'now', now.format()
-      return startDay.isAfter now
+    result = _.pickBy request.body, ({startTime}) =>
+      return @_isWithin({time: startTime, startTime: now, endTime: tomorrow})
+
+      return now.isBefore(startTime) && tomorrow.isAfter(startTime)
 
     response.send result
+
+  _isWithin: ({time, startTime, endTime}) =>
+    return startTime.isBefore(time) && endTime.isAfter(time)
 
 module.exports = AgendaController

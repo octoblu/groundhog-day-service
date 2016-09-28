@@ -7,7 +7,7 @@ path    = require 'path'
 request = require 'request'
 sinon   = require 'sinon'
 
-NON_RECURRING_YESTERDAY = cson.parseFile path.join(__dirname, '../fixtures/non-recurring-yesterday.cson')
+NON_RECURRING_YONDER = cson.parseFile path.join(__dirname, '../fixtures/non-recurring-yonder.cson')
 Server                  = require '../../src/server'
 
 describe 'non-recurring-today', ->
@@ -31,7 +31,7 @@ describe 'non-recurring-today', ->
 
   describe 'On POST /agenda', ->
     beforeEach (done) ->
-      @request.post '/agendas', body: NON_RECURRING_YESTERDAY, (error, @response, @body) =>
+      @request.post '/agendas', body: NON_RECURRING_YONDER, (error, @response, @body) =>
         done error
 
     it 'should respond with a 200', ->

@@ -7,8 +7,8 @@ path    = require 'path'
 request = require 'request'
 sinon   = require 'sinon'
 
-NON_RECURRING_YESTERDAY = cson.parseFile path.join(__dirname, '../fixtures/non-recurring-yesterday.cson')
-Server                  = require '../../src/server'
+NON_RECURRING_TODAY = cson.parseFile path.join(__dirname, '../fixtures/non-recurring-today.cson')
+Server              = require '../../src/server'
 
 describe 'non-recurring-today', ->
   beforeEach 'Go back in time to 8am MST 2016-09-28 ', =>
@@ -31,11 +31,16 @@ describe 'non-recurring-today', ->
 
   describe 'On POST /agenda', ->
     beforeEach (done) ->
-      @request.post '/agendas', body: NON_RECURRING_YESTERDAY, (error, @response, @body) =>
+      @request.post '/agendas', body: NON_RECURRING_TODAY, (error, @response, @body) =>
         done error
 
     it 'should respond with a 200', ->
       expect(@response.statusCode).to.equal 200
 
-    it 'should respond an empty object', ->
-      expect(@body).to.deep.equal {}
+    it 'should respond an object containing the meeting', ->
+      expect(@body).to.deep.equal {
+        calvin:
+          id:        'calvin'
+          startTime: '2016-09-28T16:00:00Z'
+          endTime:   '2016-09-28T16:30:00Z'
+      }
