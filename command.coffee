@@ -1,36 +1,76 @@
-_             = require 'lodash'
-MeshbluConfig = require 'meshblu-config'
-Server        = require './src/server'
+colors   = require 'colors'
+dashdash = require 'dashdash'
+
+Server      = require './src/server'
+packageJSON = require './package.json'
+
+OPTIONS = [{
+  names: ['disable-logging', 'd']
+  type: 'bool'
+  help: 'Disable Logging'
+  env: 'DISABLE_LOGGING'
+}, {
+  names: ['help', 'h']
+  type: 'bool'
+  help: 'Print this help and exit.'
+}, {
+  names: ['port', 'p']
+  type: 'integer'
+  help: 'Port to listen to'
+  env:  'PORT'
+}, {
+  names: ['version', 'v']
+  type: 'bool'
+  help: 'Print the version and exit.'
+}]
 
 class Command
-  constructor: ->
-    @serverOptions = {
-      meshbluConfig:  new MeshbluConfig().toJSON()
-      port:           process.env.PORT || 80
-      disableLogging: process.env.DISABLE_LOGGING == "true"
-    }
+  constructor: ({@argv}) ->
+    throw new Error 'Missing required parameter: argv' unless @argv?
+    process.on 'uncaughtException', @die
+    {@port, @disableLogging} = @parseOptions()
 
-  panic: (error) =>
+  die: (error) =>
     console.error error.stack
     process.exit 1
 
+  parseOptions: =>
+    parser  = dashdash.createParser({options: OPTIONS})
+    options = parser.parse @argv
+
+    if options.help
+      console.log @usage parser.help({includeEnv: true})
+      process.exit 0
+
+    if options.version
+      console.log packageJSON.version
+      process.exit 0
+
+    {port, disable_logging} = options
+    unless port?
+      console.error @usage parser.help({includeEnv: true})
+      console.error colors.red 'Missing one of: -p, --port, PORT' unless port?
+      process.exit 1
+
+    return {port, disableLogging: !!disable_logging}
+
   run: =>
-    # Use this to require env
-    # @panic new Error('Missing required environment variable: ENV_NAME') if _.isEmpty @serverOptions.envName
-    @panic new Error('Missing meshbluConfig') if _.isEmpty @serverOptions.meshbluConfig
-
-    server = new Server @serverOptions
+    server = new Server {@disableLogging, @port}
     server.run (error) =>
-      return @panic error if error?
-
-      {address,port} = server.address()
-      console.log "GroundhogDayService listening on port: #{port}"
+      return @die error if error?
+      console.log "GroundhogDayService listening on port: #{server.address().port}"
 
     process.on 'SIGTERM', =>
       console.log 'SIGTERM caught, exiting'
-      return process.exit 0 unless server?.stop?
       server.stop =>
         process.exit 0
 
-command = new Command()
-command.run()
+  usage: (optionsStr) =>
+    return """
+      usage: node command.js [options]
+
+      options:
+      #{optionsStr}
+    """
+
+module.exports = Command

@@ -1,13 +1,10 @@
-GroundhogDayController = require './controllers/groundhog-day-controller'
+AgendaController = require './controllers/agenda-controller'
 
 class Router
-  constructor: ({@groundhogDayService}) ->
-    throw new Error 'Missing groundhogDayService' unless @groundhogDayService?
+  constructor: () ->
 
   route: (app) =>
-    groundhogDayController = new GroundhogDayController {@groundhogDayService}
-
-    app.get '/hello', groundhogDayController.hello
-    # e.g. app.put '/resource/:id', someController.update
+    agendaController = new AgendaController
+    app.post '/agendas', agendaController.create
 
 module.exports = Router
