@@ -9,6 +9,9 @@ NON_RECURRING_TODAY_WE_ARE_IN_IT = require '../fixtures/non-recurring-today-we-a
 NON_RECURRING_YESTERDAY          = require '../fixtures/non-recurring-yesterday.cson'
 NON_RECURRING_YONDER             = require '../fixtures/non-recurring-yonder.cson'
 RECURRING_TODAY                  = require '../fixtures/recurring-today.cson'
+RECURRING_YESTERDAY              = require '../fixtures/recurring-yesterday.cson'
+RECURRING_YONDER                 = require '../fixtures/recurring-yonder.cson'
+
 
 describe 'Event', ->
   beforeEach 'Go back in time to 8am MST 2016-09-28 ', =>
@@ -25,6 +28,15 @@ describe 'Event', ->
           id:        'calvin'
           startTime: '2016-09-28T16:00:00Z'
           endTime:   '2016-09-28T16:30:00Z'
+        }
+
+    describe 'recurring-today', ->
+      it 'should return true', ->
+        @sut = new Event RECURRING_TODAY.calvin
+        expect(@sut.format()).to.deep.equal {
+          id:        'calvin'
+          startTime: '2016-09-28T16:00:00Z'
+          endTime:   '2016-09-28T17:00:00Z'
         }
 
   describe '-> isInNext24Hours', ->
@@ -48,7 +60,17 @@ describe 'Event', ->
         @sut = new Event NON_RECURRING_TODAY_WE_ARE_IN_IT.calvin
         expect(@sut.isInNext24Hours()).to.be.true
 
-    xdescribe 'recurring-today', ->
+    describe 'recurring-today', ->
       it 'should return true', ->
         @sut = new Event RECURRING_TODAY.calvin
         expect(@sut.isInNext24Hours()).to.be.true
+
+    describe 'recurring-yonder', ->
+      it 'should return false', ->
+        @sut = new Event RECURRING_YONDER.calvin
+        expect(@sut.isInNext24Hours()).to.be.false
+
+    describe 'recurring-yesterday', ->
+      it 'should return false', ->
+        @sut = new Event RECURRING_YESTERDAY.calvin
+        expect(@sut.isInNext24Hours()).to.be.false
