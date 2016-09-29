@@ -52,10 +52,11 @@ class Event
     hour   = @_startOfFirstEvent().hour()
     minute = @_startOfFirstEvent().minute()
     schedule = h: [hour], m: [minute]
-    if @repeats?.dayOfWeek?
-      dayOfWeek = moment().day(@repeats.dayOfWeek).day() + 1
-      schedule.dw = [dayOfWeek]
+    if @repeats?.daysOfWeek?
+      schedule.dw = _.map @repeats.daysOfWeek, (day) =>
+        return moment().day(day).day() + 1
 
+    console.log schedule
     laterSchedule = later.schedule(schedules: [schedule])
     nowMinusDuration = moment.utc().subtract @duration.length, @duration.units
     return moment.utc laterSchedule.next(1, nowMinusDuration)

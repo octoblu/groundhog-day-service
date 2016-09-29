@@ -13,6 +13,8 @@ RECURRING_YESTERDAY              = require '../fixtures/recurring-yesterday.cson
 RECURRING_YONDER                 = require '../fixtures/recurring-yonder.cson'
 RECURRING_EVERY_WEDNESDAY        = require '../fixtures/recurring-every-wednesday.cson'
 RECURRING_EVERY_FRIDAY           = require '../fixtures/recurring-every-friday.cson'
+RECURRING_EVERY_SUNDAY           = require '../fixtures/recurring-every-sunday.cson'
+RECURRING_EVERY_MONDAY_AND_WEDNESDAY = require '../fixtures/recurring-every-monday-and-wednesday.cson'
 
 describe 'Event', ->
   beforeEach 'Go back in time to 8am MST 2016-09-28 ', =>
@@ -85,3 +87,20 @@ describe 'Event', ->
       it 'should return false', ->
         @sut = new Event RECURRING_EVERY_FRIDAY.calvin
         expect(@sut.isInNext24Hours()).to.be.false
+
+
+    describe 'recurring-every-sunday', ->
+      beforeEach 'Go back in time to 8am MST 2016-09-25 ', =>
+        sinon.useFakeTimers moment('2016-09-25T15:00:00Z').valueOf()
+
+      afterEach 'Back to the future', =>
+        sinon.restore()
+
+      it 'should return true', ->
+        @sut = new Event RECURRING_EVERY_SUNDAY.calvin
+        expect(@sut.isInNext24Hours()).to.be.true
+
+    describe 'recurring-every-monday-and-wednesday', ->
+      it 'should return true', ->
+        @sut = new Event RECURRING_EVERY_MONDAY_AND_WEDNESDAY.calvin
+        expect(@sut.isInNext24Hours()).to.be.true

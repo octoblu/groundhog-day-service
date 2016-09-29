@@ -7,5 +7,5 @@ calvin:
     units: 'minutes'
   repeats:
     interval: 1
-    daysOfWeek: ['Wednesday']
+    daysOfWeek: ['Monday', 'Wednesday']
   endDate:   '2016-12-28'
