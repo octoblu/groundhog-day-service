@@ -8,7 +8,7 @@ sinon   = require 'sinon'
 RECURRING_TODAY = require '../fixtures/recurring-today.cson'
 Server          = require '../../src/server'
 
-xdescribe 'recurring-today', ->
+describe 'recurring-today', ->
   beforeEach 'Go back in time to 8am MST 2016-09-28 ', =>
     sinon.useFakeTimers moment('2016-09-28T15:00:00Z').valueOf()
 
@@ -40,5 +40,5 @@ xdescribe 'recurring-today', ->
         calvin:
           id:        'calvin'
           startTime: '2016-09-28T16:00:00Z'
-          endTime:   '2016-09-28T16:30:00Z'
+          endTime:   '2016-09-28T17:00:00Z'
       }
