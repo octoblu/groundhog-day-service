@@ -6,6 +6,7 @@ later.date.UTC()
 
 class Event
   constructor: ({@id, @startDate, @startTime, @duration, @endDate, @repeats}) ->
+    throw new Error 'Missing required parameter: startDate' unless @startDate?
     @endDate ?= @startDate
 
   format: () =>
@@ -33,7 +34,6 @@ class Event
     return false if @_endOfLastEvent().isBefore(now)
 
     next = @_nextEvent()
-    # previous = moment.utc(schedule.prev 1)
 
     return @_isWithin24Hours(next)
 
@@ -52,11 +52,12 @@ class Event
     hour   = @_startOfFirstEvent().hour()
     minute = @_startOfFirstEvent().minute()
     schedule = h: [hour], m: [minute]
-    if @repeats?.daysOfWeek?
-      schedule.dw = _.map @repeats.daysOfWeek, (day) =>
-        return moment().day(day).day() + 1
 
-    console.log schedule
+    unless _.isEmpty @repeats?.daysOfWeek
+      schedule.dw = _.map @repeats.daysOfWeek, (day) =>
+        moment().day(day).day() + 1
+
+    schedule.D = @repeats?.daysOfMonth unless _.isEmpty @repeats?.daysOfMonth
     laterSchedule = later.schedule(schedules: [schedule])
     nowMinusDuration = moment.utc().subtract @duration.length, @duration.units
     return moment.utc laterSchedule.next(1, nowMinusDuration)
