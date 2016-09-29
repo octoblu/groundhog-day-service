@@ -21,7 +21,6 @@ class Event
     return @_isInNext24HoursSingleOccurance() if _.isEmpty @repeats
     return @_isInNext24HoursRecurring()
 
-
   _endOfLastEvent: =>
     lastStartTime = moment.utc("#{@endDate}T#{@startTime}", "YYYY-MM-DDTHH:mm")
     lastStartTime.add @duration.length, @duration.units
@@ -52,10 +51,14 @@ class Event
   _nextEvent: =>
     hour   = @_startOfFirstEvent().hour()
     minute = @_startOfFirstEvent().minute()
+    schedule = h: [hour], m: [minute]
+    if @repeats?.dayOfWeek?
+      dayOfWeek = moment().day(@repeats.dayOfWeek).day() + 1
+      schedule.dw = [dayOfWeek]
 
-    schedule = later.schedule(schedules: [h: [hour], m: [minute]])
+    laterSchedule = later.schedule(schedules: [schedule])
     nowMinusDuration = moment.utc().subtract @duration.length, @duration.units
-    return moment.utc schedule.next(1, nowMinusDuration)
+    return moment.utc laterSchedule.next(1, nowMinusDuration)
 
   _startOfFirstEvent: =>
     moment.utc("#{@startDate}T#{@startTime}", "YYYY-MM-DDTHH:mm")

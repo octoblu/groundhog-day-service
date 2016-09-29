@@ -11,7 +11,8 @@ NON_RECURRING_YONDER             = require '../fixtures/non-recurring-yonder.cso
 RECURRING_TODAY                  = require '../fixtures/recurring-today.cson'
 RECURRING_YESTERDAY              = require '../fixtures/recurring-yesterday.cson'
 RECURRING_YONDER                 = require '../fixtures/recurring-yonder.cson'
-
+RECURRING_EVERY_WEDNESDAY        = require '../fixtures/recurring-every-wednesday.cson'
+RECURRING_EVERY_FRIDAY           = require '../fixtures/recurring-every-friday.cson'
 
 describe 'Event', ->
   beforeEach 'Go back in time to 8am MST 2016-09-28 ', =>
@@ -73,4 +74,14 @@ describe 'Event', ->
     describe 'recurring-yesterday', ->
       it 'should return false', ->
         @sut = new Event RECURRING_YESTERDAY.calvin
+        expect(@sut.isInNext24Hours()).to.be.false
+
+    describe 'recurring-every-wednesday', ->
+      it 'should return true', ->
+        @sut = new Event RECURRING_EVERY_WEDNESDAY.calvin
+        expect(@sut.isInNext24Hours()).to.be.true
+
+    describe 'recurring-every-friday', ->
+      it 'should return false', ->
+        @sut = new Event RECURRING_EVERY_FRIDAY.calvin
         expect(@sut.isInNext24Hours()).to.be.false
