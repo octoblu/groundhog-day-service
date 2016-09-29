@@ -5,7 +5,7 @@ calvin:
   duration:
     length: 60
     units: 'minutes'
-  recurrance:
+  repeats:
     interval: 1
     units: 'days'
   endDate:   '2016-12-28'

@@ -1,5 +1,4 @@
 _      = require 'lodash'
-moment = require 'moment'
 
 Event = require '../models/event'
 

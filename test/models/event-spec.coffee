@@ -8,6 +8,7 @@ NON_RECURRING_TODAY              = require '../fixtures/non-recurring-today.cson
 NON_RECURRING_TODAY_WE_ARE_IN_IT = require '../fixtures/non-recurring-today-we-are-in-it.cson'
 NON_RECURRING_YESTERDAY          = require '../fixtures/non-recurring-yesterday.cson'
 NON_RECURRING_YONDER             = require '../fixtures/non-recurring-yonder.cson'
+RECURRING_TODAY                  = require '../fixtures/recurring-today.cson'
 
 describe 'Event', ->
   beforeEach 'Go back in time to 8am MST 2016-09-28 ', =>
@@ -45,4 +46,9 @@ describe 'Event', ->
     describe 'non-recurring-today-we-are-in-it', ->
       it 'should return true', ->
         @sut = new Event NON_RECURRING_TODAY_WE_ARE_IN_IT.calvin
+        expect(@sut.isInNext24Hours()).to.be.true
+
+    xdescribe 'recurring-today', ->
+      it 'should return true', ->
+        @sut = new Event RECURRING_TODAY.calvin
         expect(@sut.isInNext24Hours()).to.be.true
