@@ -8,12 +8,18 @@ class AgendaController
     now      = moment.utc()
     tomorrow = moment.utc().add 1, 'day'
 
-    result = _.pickBy request.body, ({startTime, endTime}) =>
-      return true if @_isWithin({time: startTime, startTime: now, endTime: tomorrow})
-      return true if @_isWithin({time: endTime, startTime: now, endTime: tomorrow})
-      return false
+    result = _.mapValues request.body, ({id, startDate, startTime, duration}) =>
+      startMoment = moment.utc("#{startDate}T#{startTime}", "YYYY-MM-DDTHH:mm")
+      endMoment   = moment(startMoment).add(duration.length, duration.units)
 
-    response.send result
+      return @_format {id, startMoment, endMoment} if @_isWithin {time: startMoment, startTime: now, endTime: tomorrow}
+      return @_format {id, startMoment, endMoment} if @_isWithin {time: endMoment, startTime: now, endTime: tomorrow}
+      return null
+
+    response.send _.omitBy result, _.isNil
+
+  _format: ({id, startMoment, endMoment}) =>
+    return { id, startTime: startMoment.format(), endTime: endMoment.format() }
 
   _isWithin: ({time, startTime, endTime}) =>
     return startTime.isBefore(time) && endTime.isAfter(time)
