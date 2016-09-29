@@ -1,14 +1,12 @@
 {afterEach, beforeEach, describe, it} = global
 {expect} = require 'chai'
 
-cson    = require 'cson'
 moment  = require 'moment'
-path    = require 'path'
 request = require 'request'
 sinon   = require 'sinon'
 
-NON_RECURRING_TODAY = cson.parseFile path.join(__dirname, '../fixtures/non-recurring-today.cson')
-Server              = require '../../src/server'
+RECURRING_TODAY = require '../fixtures/recurring-today.cson'
+Server          = require '../../src/server'
 
 xdescribe 'recurring-today', ->
   beforeEach 'Go back in time to 8am MST 2016-09-28 ', =>
@@ -31,7 +29,7 @@ xdescribe 'recurring-today', ->
 
   describe 'On POST /agenda', ->
     beforeEach (done) ->
-      @request.post '/agendas', body: NON_RECURRING_TODAY, (error, @response, @body) =>
+      @request.post '/agendas', body: RECURRING_TODAY, (error, @response, @body) =>
         done error
 
     it 'should respond with a 200', ->

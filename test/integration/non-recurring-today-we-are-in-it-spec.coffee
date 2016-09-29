@@ -1,14 +1,11 @@
 {afterEach, beforeEach, describe, it} = global
 {expect} = require 'chai'
 
-cson    = require 'cson'
 moment  = require 'moment'
-path    = require 'path'
 request = require 'request'
 sinon   = require 'sinon'
 
-NON_RECURRING_TODAY_WE_ARE_IN_IT =
-  cson.parseFile(path.join(__dirname, '../fixtures/non-recurring-today-we-are-in-it.cson'))
+NON_RECURRING_TODAY_WE_ARE_IN_IT = require '../fixtures/non-recurring-today-we-are-in-it.cson'
 Server              = require '../../src/server'
 
 describe 'non-recurring-today-we-are-in-it', ->

@@ -1,14 +1,12 @@
 {afterEach, beforeEach, describe, it} = global
 {expect} = require 'chai'
 
-cson    = require 'cson'
 moment  = require 'moment'
-path    = require 'path'
 request = require 'request'
 sinon   = require 'sinon'
 
-NON_RECURRING_YONDER = cson.parseFile path.join(__dirname, '../fixtures/non-recurring-yonder.cson')
-Server                  = require '../../src/server'
+NON_RECURRING_YONDER = require '../fixtures/non-recurring-yonder.cson'
+Server               = require '../../src/server'
 
 describe 'non-recurring-today', ->
   beforeEach 'Go back in time to 8am MST 2016-09-28 ', =>
