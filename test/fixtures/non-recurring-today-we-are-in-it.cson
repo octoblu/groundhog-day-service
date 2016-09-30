@@ -1,7 +1,13 @@
 calvin:
   id:        'calvin'
+
   startDate: '2016-09-28'
-  startTime: '14:00:00'
+  endDate: '2016-09-28'
+
   duration:
     length: 2
     units: 'hours'
+
+  schedules: [
+    startTimes: ['14:00:00']
+  ]

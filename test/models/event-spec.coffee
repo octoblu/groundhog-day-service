@@ -15,9 +15,12 @@ RECURRING_EVERY_WEDNESDAY        = require '../fixtures/recurring-every-wednesda
 RECURRING_EVERY_FRIDAY           = require '../fixtures/recurring-every-friday.cson'
 RECURRING_EVERY_SUNDAY           = require '../fixtures/recurring-every-sunday.cson'
 RECURRING_EVERY_MONDAY_AND_WEDNESDAY = require '../fixtures/recurring-every-monday-and-wednesday.cson'
-RECURRING_EVERY_13TH             = require '../fixtures/recurring-every-13th.cson'
+RECURRING_EVERY_13TH          = require '../fixtures/recurring-every-13th.cson'
+RECURRING_EVERY_3RD_WEDNESDAY = require '../fixtures/recurring-every-3rd-wednesday'
+RECURRING_EVERY_3RD_FRIDAY    = require '../fixtures/recurring-every-3rd-friday'
+RECURRING_EVERY_31ST_DAY      = require '../fixtures/recurring-every-31st-day'
 
-describe 'Event', ->
+describe.only 'Event', ->
   beforeEach 'Go back in time to 8am MST 2016-09-28 ', =>
     sinon.useFakeTimers moment('2016-09-28T15:00:00Z').valueOf()
 
@@ -35,7 +38,7 @@ describe 'Event', ->
         }
 
     describe 'recurring-today', ->
-      it 'should return true', ->
+      it 'should return the formatted meeting', ->
         @sut = new Event RECURRING_TODAY.calvin
         expect(@sut.format()).to.deep.equal {
           id:        'calvin'
@@ -109,3 +112,24 @@ describe 'Event', ->
       it 'should return true', ->
         @sut = new Event RECURRING_EVERY_13TH.calvin
         expect(@sut.isInNext24Hours()).to.be.false
+
+    describe 'recurring-every-3rd-wednesday', ->
+      it 'should return true', ->
+        @sut = new Event RECURRING_EVERY_3RD_WEDNESDAY.calvin
+        expect(@sut.isInNext24Hours()).to.be.true
+
+    describe 'recurring-every-3rd-friday', ->
+      it 'should return false', ->
+        @sut = new Event RECURRING_EVERY_3RD_FRIDAY.calvin
+        expect(@sut.isInNext24Hours()).to.be.false
+
+    xdescribe 'recurring-every-31st-day-of-month', ->
+      beforeEach 'Go back in time to 8am MST 2016-09-28 ', =>
+        sinon.useFakeTimers moment('2016-09-30T15:00:00Z').valueOf()
+
+      afterEach 'Back to the future', =>
+        sinon.restore()
+
+      it 'should return true', ->
+        @sut = new Event RECURRING_EVERY_31ST_DAY.calvin
+        expect(@sut.isInNext24Hours()).to.be.true

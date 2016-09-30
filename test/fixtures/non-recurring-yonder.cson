@@ -1,7 +1,9 @@
 calvin:
   id:        'calvin'
   startDate: '2016-09-30'
-  startTime: '16:00:00'
+  schedules: [
+    startTimes: ['16:00:00']
+  ]
   duration:
     length: 30
     units: 'minutes'

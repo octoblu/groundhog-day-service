@@ -1,7 +1,7 @@
 calvin:
   id:        'calvin'
 
-  startDate: '2016-07-28'
+  startDate: '2016-03-01'
   endDate:   '2016-12-28'
 
   duration:
@@ -9,6 +9,7 @@ calvin:
     units: 'minutes'
 
   schedules: [
-    startTimes: ['16:00:00']
-    daysOfWeek: ['Monday', 'Wednesday']
+    startTimes:  ['16:00:00']
+    daysOfMonth: [31]
+    daysOfWeek:  ['Sunday']
   ]

@@ -1,11 +1,13 @@
 calvin:
   id:        'calvin'
-  startDate: '2016-09-10'
-  startTime: '16:00:00'
-  duration:
-    length: 30
-    units: 'minutes'
-  repeats:
-    interval: 1
-    units: 'days'
+
+  startDate: '2016-07-28'
   endDate:   '2016-09-27'
+
+  duration:
+    length: 60
+    units: 'minutes'
+
+  schedules: [
+    startTimes: ['16:00:00']
+  ]
